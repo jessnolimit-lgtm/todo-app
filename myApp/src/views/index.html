@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List App</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+    }
+    .main-wrapper {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background: #f7f7fa;
+      border-right: 1px solid #e0e0e0;
+      padding: 24px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .sidebar h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #444;
+      margin: 0 0 24px 32px;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0 0 0 0;
+      margin: 0;
+    }
+    .sidebar li {
+      padding: 12px 32px;
+      color: #444;
+      font-size: 1.08rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      border-left: 4px solid transparent;
+      transition: background 0.2s, border 0.2s;
+    }
+    .sidebar li.active, .sidebar li:hover {
+      background: #e8eaf6;
+      border-left: 4px solid #7c4dff;
+      color: #7c4dff;
+    }
+    .sidebar .new-list {
+      color: #1976d2;
+      font-weight: 700;
+      margin: 24px 0 0 32px;
+      cursor: pointer;
+    }
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.95);
+      min-height: 100vh;
+    }
+    .header {
+      width: 100%;
+      background: linear-gradient(90deg, #7c4dff 0%, #536dfe 100%);
+      color: #fff;
+      padding: 32px 48px 24px 48px;
+      border-bottom-left-radius: 32px;
+      box-shadow: 0 4px 24px rgba(124,77,255,0.08);
+    }
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .header .date {
+      font-size: 1.1rem;
+      color: #e0e0e0;
+      font-weight: 400;
+    }
+    .todo-section {
+      width: 100%;
+      max-width: 600px;
+      margin: 32px auto 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(124,77,255,0.06);
+      padding: 32px 32px 24px 32px;
+    }
+    .todo-section form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .todo-section input[type="text"],
+    .todo-section input[type="date"] {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .todo-section input[type="text"]:focus,
+    .todo-section input[type="date"]:focus {
+      border: 1.5px solid #7c4dff;
+    }
+    .todo-section button {
+      background: #7c4dff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .todo-section button:hover {
+      background: #536dfe;
+    }
+    .todo-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .todo-list li {
+      background: #f7f7fa;
+      margin-bottom: 10px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      box-shadow: 0 1px 4px rgba(124,77,255,0.04);
+      transition: background 0.2s;
+    }
+    .todo-list li.completed {
+      text-decoration: line-through;
+      color: #b0b0b0;
+      background: #e0e0e0;
+    }
+    .todo-list .delete-btn {
+      background: none;
+      border: none;
+      color: #ea4335;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: color 0.2s;
+    }
+    .todo-list .delete-btn:hover {
+      color: #b31412;
+    }
+    .todo-list .check-btn {
+      background: none;
+      border: none;
+      color: #34a853;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: color 0.2s;
+    }
+    .todo-list .check-btn:hover {
+      color: #0b8043;
+    }
+    .add-list-btn {
+      color: #1976d2;
+      font-weight: 700;
+      margin: 24px 0 0 32px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-wrapper">
+    <aside class="sidebar">
+      <h2>To-do app</h2>
+      <ul>
+        <li class="active">My Day</li>
+        <li>Important</li>
+        <li>Planned</li>
+        <li>Tasks</li>
+        <li>Shopping</li>
+        <li>Pictures</li>
+        <li>Secret Project</li>
+      </ul>
+      <button class="add-list-btn">+ New list</button>
+    </aside>
+    <main class="content">
+      <div class="header">
+        <h1>My Day</h1>
+        <div class="date" id="today-date"></div>
+      </div>
+      <section class="todo-section">
+        <form id="todo-form">
+          <input type="text" id="task-input" placeholder="Add a new task..." required />
+          <input type="date" id="due-date-input" />
+          <button type="submit">Add</button>
+        </form>
+        <ul id="todo-list" class="todo-list"></ul>
+      </section>
+    </main>
+  </div>
+  <script>
+
+    async function fetchTasks() {
+      const res = await fetch('/tasks', { credentials: 'include' });
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        // If not JSON, likely redirected to login
+        window.location.href = '/login.html';
+        return [];
+      }
+    }
+    async function addTask(title, due_date) {
+      const res = await fetch('/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, due_date }),
+        credentials: 'include'
+      });
+      return res.ok;
+    }
+
+    async function deleteTaskFromServer(id) {
+      await fetch(`/tasks/${id}`, { method: 'DELETE', credentials: 'include' });
+    }
+
+    async function completeTask(id) {
+      await fetch(`/tasks/${id}/complete`, { method: 'PATCH', credentials: 'include' });
+    }
+
+    document.getElementById('todo-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('task-input');
+      const dateInput = document.getElementById('due-date-input');
+      const title = input.value.trim();
+      const due_date = dateInput.value || null;
+      if (title) {
+        await addTask(title, due_date);
+        input.value = '';
+        dateInput.value = '';
+        renderTasks();
+      }
+    });
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString();
+    }
+
+    async function renderTasks() {
+      const list = document.getElementById('todo-list');
+      list.innerHTML = '';
+      const tasks = await fetchTasks();
+      tasks.forEach(task => {
+        const li = document.createElement('li');
+        if (task.completed) li.classList.add('completed');
+        li.innerHTML = `
+          <span style="display:flex;align-items:center;gap:8px;">
+            <button class="check-btn" title="Mark as complete" onclick="window.completeTask(${task.id})">✔</button>
+            <span style="display:flex;flex-direction:column;">
+              <strong>${task.title}</strong>
+              ${task.due_date ? `<small style='color:#888'>(Due: ${formatDate(task.due_date)})</small>` : ''}
+            </span>
+          </span>
+          <button class="delete-btn" title="Delete" onclick="window.deleteTask(${task.id})">🗑</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+  // Set today's date in header
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  window.deleteTask = async (id) => { await deleteTaskFromServer(id); renderTasks(); };
+    window.completeTask = async (id) => { await completeTask(id); renderTasks(); };
+    renderTasks();
+  </script>
+</body>
+</html>
