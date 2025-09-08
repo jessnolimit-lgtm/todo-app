@@ -19,12 +19,13 @@ app.use(session({
 // Serve static files from views
 app.use(express.static(__dirname + '/src/views'));
 
-// MySQL connection for login
+// MySQL connection for login (uses Railway or local env variables)
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root123",
-  database: "todo_db"
+  host: process.env.MYSQLHOST || "localhost",
+  user: process.env.MYSQLUSER || "root",
+  password: process.env.MYSQLPASSWORD || "root123",
+  database: process.env.MYSQLDATABASE || "todo_db",
+  port: process.env.MYSQLPORT || 3306
 });
 
 // Login route
@@ -53,6 +54,6 @@ app.get("/", requireLogin, (req, res) => {
 
 app.use("/tasks", requireLogin, tasksRoutes);
 
-app.listen(3000, () => {
-  console.log("🚀 Server running on http://localhost:3000");
+app.listen(3000, '0.0.0.0', () => {
+  console.log("🚀 Server running on http://0.0.0.0:3000 (LAN access enabled)");
 });
